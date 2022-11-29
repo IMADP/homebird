@@ -16,12 +16,9 @@ import {
 import { AccountSwitcher } from './AccountSwitcher'
 import { NavGroup } from './NavGroup'
 import { NavItem } from './NavItem'
-import { ChakraProvider } from '@chakra-ui/react'
-import { theme } from '@chakra-ui/pro-theme' 
 
 const App = () => {
   return (
-    <ChakraProvider theme={theme}>
     <Box height="100vh" overflow="hidden" position="relative">
       <Flex h="full" id="app-container">
         <Box w="64" bg="gray.900" color="white" fontSize="sm">
@@ -70,7 +67,6 @@ const App = () => {
         </Box>
       </Flex>
     </Box>
-    </ChakraProvider>
   )
 }
 
