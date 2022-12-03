@@ -17,7 +17,7 @@ import {
   Link,
   useLocation, useNavigate
 } from "react-router-dom";
-import { useAuthContext } from '../../App';
+import { useAuthContext } from '../../auth/AuthContext';
 import { Logo } from './Logo';
 import { PasswordField } from './PasswordField';
 
