@@ -14,6 +14,7 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import {
+  Link,
   useLocation, useNavigate
 } from "react-router-dom";
 import { useAuthContext } from '../../App';
@@ -34,17 +35,13 @@ export const LoginPage = () => {
     let formData = new FormData(event.currentTarget);
     let email = formData.get("email") as string;
     email = 'user';
-    console.log(email);
-    console.log(auth);
     auth.signin(email, () => {
-      console.log('callback')
       // Send them back to the page they tried to visit when they were
       // redirected to the login page. Use { replace: true } so we don't create
       // another entry in the history stack for the login page.  This means that
       // when they get to the protected page and click the back button, they
       // won't end up back on the login page, which is also really nice for the
       // user experience.
-      console.log(from);
       navigate(from, { replace: true });
     });
   }
@@ -81,9 +78,11 @@ export const LoginPage = () => {
             </Heading>
             <HStack spacing="1" justify="center">
               <Text color="muted">Don't have an account?</Text>
-              <Button variant="link" colorScheme="blue">
-                Sign up
-              </Button>
+              <Link to="/register">
+                <Button variant="link" colorScheme="blue">
+                  Sign up
+                </Button>
+              </Link>
             </HStack>
           </Stack>
         </Stack>
@@ -130,6 +129,16 @@ export const LoginPage = () => {
             </Stack>
           </form>
         </Box>
+        <HStack justify="center" spacing="1">
+          <Text fontSize="sm" color="muted">
+            Don't have an account?
+          </Text>
+          <Link to="/register">
+              <Button variant="link" colorScheme="blue" size="sm">
+            Register
+          </Button>
+          </Link>
+        </HStack>
       </Stack>
     </Container>)
 }

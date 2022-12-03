@@ -5,13 +5,15 @@ import {
 import { fakeAuthProvider } from "./auth";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import { LoginPage } from "./pages/login/LoginPage";
+import { RegisterPage } from "./pages/register/RegisterPage";
 
 export default function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route>
-          <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
           <Route
             path="/"
             element={
@@ -56,6 +58,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   let value = { user, signin, signout };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   let auth = useAuthContext();
