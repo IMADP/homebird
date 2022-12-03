@@ -1,73 +1,73 @@
-import { Box, Circle, Flex, Stack, useColorModeValue as mode } from '@chakra-ui/react'
+import * as React from "react";
 import {
-  BiBuoy,
-  BiCog,
-  BiCommentAdd,
-  BiCreditCard,
-  BiEnvelope,
-  BiHome,
-  BiNews,
-  BiPurchaseTagAlt,
-  BiRecycle,
-  BiRedo,
-  BiUserCircle,
-  BiWallet
-} from 'react-icons/bi'
-import { AccountSwitcher } from './AccountSwitcher'
-import { NavGroup } from './NavGroup'
-import { NavItem } from './NavItem'
+  Navigate, Route, Routes, useLocation
+} from "react-router-dom";
+import { fakeAuthProvider } from "./auth";
+import DashboardPage from "./pages/dashboard/DashboardPage";
+import { LoginPage } from "./pages/login/LoginPage";
 
-const App = () => {
+export default function App() {
   return (
-    <Box height="100vh" overflow="hidden" position="relative">
-      <Flex h="full" id="app-container">
-        <Box w="64" bg="gray.900" color="white" fontSize="sm">
-          <Flex h="full" direction="column" px="4" py="4">
-            <AccountSwitcher />
-            <Stack spacing="8" flex="1" overflow="auto" pt="8">
-              <Stack spacing="1">
-                <NavItem active icon={<BiHome />} label="Get Started" />
-                <NavItem icon={<BiCommentAdd />} label="Inbox" />
-              </Stack>
-              <NavGroup label="Your Business">
-                <NavItem icon={<BiCreditCard />} label="Transactions" />
-                <NavItem icon={<BiUserCircle />} label="Customers" />
-                <NavItem icon={<BiWallet />} label="Income" />
-                <NavItem icon={<BiRedo />} label="Transfer" />
-              </NavGroup>
-
-              <NavGroup label="Seller Tools">
-                <NavItem icon={<BiNews />} label="Payment Pages" />
-                <NavItem icon={<BiEnvelope />} label="Invoices" />
-                <NavItem icon={<BiPurchaseTagAlt />} label="Plans" />
-                <NavItem icon={<BiRecycle />} label="Subscription" />
-              </NavGroup>
-            </Stack>
-            <Box>
-              <Stack spacing="1">
-                <NavItem subtle icon={<BiCog />} label="Settings" />
-                <NavItem
-                  subtle
-                  icon={<BiBuoy />}
-                  label="Help & Support"
-                  endElement={<Circle size="2" bg="blue.400" />}
-                />
-              </Stack>
-            </Box>
-          </Flex>
-        </Box>
-        <Box bg={mode('white', 'gray.800')} flex="1" p="6">
-          <Box
-            w="full"
-            h="full"
-            rounded="lg"
-            border="3px dashed currentColor"
-            color={mode('gray.200', 'gray.700')}
+    <AuthProvider>
+      <Routes>
+        <Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <DashboardPage />
+              </RequireAuth>
+            }
           />
-        </Box>
-      </Flex>
-    </Box>
-  )
+        </Route>
+      </Routes>
+    </AuthProvider>
+  );
 }
 
-export default App;
+interface AuthContextType {
+  user: any;
+  signin: (user: string, callback: VoidFunction) => void;
+  signout: (callback: VoidFunction) => void;
+}
+
+export const AuthContext = React.createContext<AuthContextType>(null!);
+
+export const useAuthContext = () => React.useContext(AuthContext);
+
+function AuthProvider({ children }: { children: React.ReactNode }) {
+  let [user, setUser] = React.useState<any>(null);
+
+  let signin = (newUser: string, callback: VoidFunction) => {
+    return fakeAuthProvider.signin(() => {
+      setUser(newUser);
+      callback();
+    });
+  };
+
+  let signout = (callback: VoidFunction) => {
+    return fakeAuthProvider.signout(() => {
+      setUser(null);
+      callback();
+    });
+  };
+
+  let value = { user, signin, signout };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+function RequireAuth({ children }: { children: JSX.Element }) {
+  let auth = useAuthContext();
+  let location = useLocation();
+
+  if (!auth.user) {
+    // Redirect them to the /login page, but save the current location they were
+    // trying to go to when they were redirected. This allows us to send them
+    // along to that page after they login, which is a nicer user experience
+    // than dropping them off on the home page.
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+}
