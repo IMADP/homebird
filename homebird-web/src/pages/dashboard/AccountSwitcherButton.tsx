@@ -1,4 +1,5 @@
 import { Box, Flex, FlexProps, HStack, Img, useMenuButton } from '@chakra-ui/react'
+import { Logo } from 'components/Logo'
 import * as React from 'react'
 import { HiSelector } from 'react-icons/hi'
 
@@ -24,20 +25,13 @@ export const AccountSwitcherButton = (props: FlexProps) => {
       _focus={{ shadow: 'outline' }}
     >
       <HStack flex="1" spacing="3">
-        <Img
-          w="8"
-          h="8"
-          rounded="md"
-          objectFit="cover"
-          src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MzV8fG1hbiUyMHNpbWxpbmd8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=100"
-          alt="Chakra UI"
-        />
+        <Logo color="white" small={true}/>
         <Box textAlign="start">
           <Box noOfLines={1} fontWeight="semibold">
-            Chakra UI
+          Shore House
           </Box>
           <Box fontSize="xs" color="gray.400">
-            ID 123343
+          homebird
           </Box>
         </Box>
       </HStack>

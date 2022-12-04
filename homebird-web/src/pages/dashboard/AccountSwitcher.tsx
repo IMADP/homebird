@@ -16,20 +16,17 @@ export const AccountSwitcher = () => {
     <Menu>
       <AccountSwitcherButton />
       <MenuList shadow="lg" py="4" color={useColorModeValue('gray.600', 'gray.200')} px="3">
-        <Text fontWeight="medium" mb="2">
-          joe.biden@chakra-ui.com
-        </Text>
-        <MenuOptionGroup defaultValue="chakra-ui">
+         <MenuOptionGroup defaultValue="chakra-ui">
           <MenuItemOption value="chakra-ui" fontWeight="semibold" rounded="md">
-            Chakra UI
+            Shore House
           </MenuItemOption>
           <MenuItemOption value="careerlyft" fontWeight="semibold" rounded="md">
-            CareerLyft
+            North House
           </MenuItemOption>
         </MenuOptionGroup>
         <MenuDivider />
-        <MenuItem rounded="md">Workspace settings</MenuItem>
-        <MenuItem rounded="md">Add an account</MenuItem>
+        <MenuItem rounded="md">Add House</MenuItem>
+        <MenuItem rounded="md">Account Settings</MenuItem>
         <MenuDivider />
         <MenuItem rounded="md">Logout</MenuItem>
       </MenuList>
