@@ -2,7 +2,7 @@ import {
     Alert,
     AlertDescription,
     AlertIcon,
-    AlertTitle, Box, Container, ListItem, UnorderedList
+    AlertTitle, Box, ListItem, UnorderedList
 } from '@chakra-ui/react';
 
 export interface ValidationError {
@@ -21,7 +21,7 @@ const getKey = function (error: ValidationError): string {
 
 const getMessage = function (error: ValidationError): string {
 
-    if(error.error === 'inUse') {
+    if (error.error === 'inUse') {
         return `The ${error.path[0]} is currently in use`;
     }
 

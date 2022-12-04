@@ -11,11 +11,18 @@ import {
     Text, useBreakpointValue, useColorModeValue
 } from '@chakra-ui/react';
 import { UserApi, UserRequest } from 'api/user-api';
+import { useAuthContext } from 'auth/AuthContext';
 import { Logo } from 'components/Logo';
 import { ValidationError, ValidationErrors } from 'components/validation/ValidationErrors';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react'
 
+// default request
+const userRequestDefault: UserRequest = {
+    email: "",
+    password: ""
+};
 
 /**
  * RegisterPage
@@ -23,56 +30,43 @@ import { Link } from 'react-router-dom';
  * @returns 
  */
 export const RegisterPage = () => {
-
-    // form object
-    const userRequestDefault: UserRequest = {
-        email: "",
-        password: ""
-    };
-
+    const navigate = useNavigate();
+    const auth = useAuthContext();
+    const toast = useToast();
     const [userRequest, setUserRequest] = useState(userRequestDefault);
     const [errors, setErrors] = useState<Array<ValidationError>>([]);
 
-    const formHandler = async (ev: React.ChangeEvent<HTMLFormElement>) => {
-        ev.preventDefault();
+    const formHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
         setUserRequest(userRequest);
 
         await UserApi.createUser(userRequest)
-            .then((response) => {
-                // handle success
-                console.log('success');
-                console.log(response);
-                setUserRequest(userRequestDefault);
+            .then(() => {
+                // sign in on success
+                auth.signin(userRequest.email, userRequest.password, () => { navigate('/') });
             })
             .catch((error) => {
+
+                // handle validation errors
                 if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2x
                     setErrors(error.response.data);
                     return;
-
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-
+                } 
+                
+                // toast if a more generic error happened
+                console.log('Error', error.message);
+                toast({
+                    title: 'Communication Error',
+                    description: "Your request couldn't be completed, please try again later",
+                    status: 'error',
+                    duration: 10000,
+                    isClosable: true,
+                  })
             });
-
-
-
     };
 
-    const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-
-        setUserRequest({
-            ...userRequest,
-            [ev.target.name]: ev.target.value
-        })
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserRequest({...userRequest, [e.target.name]: e.target.value })
     }
 
     return (
@@ -87,15 +81,13 @@ export const RegisterPage = () => {
                 sm: '8',
             }}
         >
-
-
             <form onSubmit={formHandler}>
                 <Stack spacing="8">
                     <Stack spacing="6" align="center">
                         <Logo />
                         <Stack spacing="3" textAlign="center">
                             <Heading size={useBreakpointValue({ base: 'xs', md: 'sm' })}>Create an account</Heading>
-                            <Text color="muted">Every bird needs a home</Text>
+                            <Text color="muted">Every home needs a bird</Text>
                         </Stack>
                     </Stack>
 
@@ -132,8 +124,8 @@ export const RegisterPage = () => {
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel htmlFor="password">Password</FormLabel>
-                                    <Input id="password" name='password' type="password" value={userRequest.password} onChange={handleInputChange} />
-                                    <FormHelperText color="muted">Please use a password manager</FormHelperText>
+                                    <Input id="password" name='password' type="text" value={userRequest.password} onChange={handleInputChange} />
+                                    <FormHelperText color="muted">Heads up, this field is unmasked</FormHelperText>
                                 </FormControl>
                             </Stack>
                             <Stack spacing="4">

@@ -7,7 +7,7 @@ import { fakeAuthProvider } from "./authProvider";
  */
 interface AuthContextType {
   user: any;
-  signin: (user: string, callback: VoidFunction) => void;
+  signin: (email: string, password: string, callback: VoidFunction) => void;
   signout: (callback: VoidFunction) => void;
 }
 
@@ -22,9 +22,9 @@ const AuthContext = createContext<AuthContextType>(null!);
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   let [user, setUser] = useState<any>(null);
 
-  let signin = (newUser: string, callback: VoidFunction) => {
+  let signin = (email: string, password: string, callback: VoidFunction) => {
     return fakeAuthProvider.signin(() => {
-      setUser(newUser);
+      setUser(email);
       callback();
     });
   };

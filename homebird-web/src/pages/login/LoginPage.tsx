@@ -13,12 +13,12 @@ import {
   useBreakpointValue,
   useColorModeValue
 } from '@chakra-ui/react';
+import { Logo } from 'components/Logo';
 import {
   Link,
   useLocation, useNavigate
 } from "react-router-dom";
 import { useAuthContext } from '../../auth/AuthContext';
-import { Logo } from 'components/Logo';
 import { PasswordField } from './PasswordField';
 
 export const LoginPage = () => {
@@ -30,19 +30,12 @@ export const LoginPage = () => {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-    let formData = new FormData(event.currentTarget);
-    let email = formData.get("email") as string;
-    email = 'user';
-    auth.signin(email, () => {
-      // Send them back to the page they tried to visit when they were
-      // redirected to the login page. Use { replace: true } so we don't create
-      // another entry in the history stack for the login page.  This means that
-      // when they get to the protected page and click the back button, they
-      // won't end up back on the login page, which is also really nice for the
-      // user experience.
-      navigate(from, { replace: true });
-    });
+    // redirect to their original destination
+    auth.signin(email, password, () => { navigate(from, { replace: true }) });
   }
 
   return (
@@ -76,12 +69,7 @@ export const LoginPage = () => {
               Log in to your account
             </Heading>
             <HStack spacing="1" justify="center">
-              <Text color="muted">Don't have an account?</Text>
-              <Link to="/register">
-                <Button variant="link" colorScheme="blue">
-                  Sign up
-                </Button>
-              </Link>
+              <Text color="muted">Every bird needs a home</Text>
             </HStack>
           </Stack>
         </Stack>
