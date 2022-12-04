@@ -18,9 +18,8 @@ import {
   useLocation, useNavigate
 } from "react-router-dom";
 import { useAuthContext } from '../../auth/AuthContext';
-import { Logo } from './Logo';
+import { Logo } from 'components/Logo';
 import { PasswordField } from './PasswordField';
-
 
 export const LoginPage = () => {
   let navigate = useNavigate();
@@ -134,9 +133,9 @@ export const LoginPage = () => {
             Don't have an account?
           </Text>
           <Link to="/register">
-              <Button variant="link" colorScheme="blue" size="sm">
-            Register
-          </Button>
+            <Button variant="link" colorScheme="blue" size="sm">
+              Register
+            </Button>
           </Link>
         </HStack>
       </Stack>

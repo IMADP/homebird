@@ -12,7 +12,7 @@ import {
     Text, useBreakpointValue, useColorModeValue
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { Logo } from './Logo'
+import { Logo } from 'components/Logo'
 
 export const RegisterPage = () => (
     <Container maxW="md" py={{ base: '12', md: '24' }}>
