@@ -21,7 +21,7 @@ export const RegisterPage = () => (
                 <Logo />
                 <Stack spacing="3" textAlign="center">
                     <Heading size={useBreakpointValue({ base: 'xs', md: 'sm' })}>Create an account</Heading>
-                    <Text color="muted">Start making your dreams come true</Text>
+                    <Text color="muted">Every bird needs a home</Text>
                 </Stack>
             </Stack>
             <Box
@@ -48,10 +48,6 @@ export const RegisterPage = () => (
             >
                 <Stack spacing="6">
                     <Stack spacing="5">
-                        <FormControl isRequired>
-                            <FormLabel htmlFor="name">Name</FormLabel>
-                            <Input id="name" type="text" />
-                        </FormControl>
                         <FormControl isRequired>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <Input id="email" type="email" />
