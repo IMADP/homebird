@@ -1,4 +1,4 @@
-import { ApiResponse, post } from "api/api-client";
+import { AxiosResponse, post } from "api/api-client";
 
 export interface User {
   id: string;
@@ -16,6 +16,6 @@ export interface TimeZone {
 }
 
 export const UserApi = {
-  createUser: (userRequest: UserRequest): Promise<ApiResponse<User>> =>
+  createUser: (userRequest: UserRequest): Promise<AxiosResponse<User>> =>
     post<User>("/user", userRequest),
 };

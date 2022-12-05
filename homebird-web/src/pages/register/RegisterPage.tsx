@@ -10,19 +10,14 @@ import {
     Input, Stack,
     Text, useBreakpointValue, useColorModeValue, useToast
 } from '@chakra-ui/react';
+import { formRequest } from 'api/api-client';
 import { AuthApi } from 'api/auth-api';
-import { UserApi, UserRequest } from 'api/user-api';
+import { User, UserApi } from 'api/user-api';
 import { useAuthContext } from 'auth/AuthContext';
 import { Logo } from 'components/Logo';
 import { ValidationError, ValidationErrors } from 'components/validation/ValidationErrors';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-// default request
-const userRequestDefault: UserRequest = {
-    email: "",
-    password: ""
-};
 
 /**
  * RegisterPage
@@ -30,72 +25,58 @@ const userRequestDefault: UserRequest = {
  * @returns 
  */
 export const RegisterPage = () => {
+
+    // hooks
     const navigate = useNavigate();
     const auth = useAuthContext();
     const toast = useToast();
-    const [userRequest, setUserRequest] = useState(userRequestDefault);
+
+    // state
+    const [isLoading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<Array<ValidationError>>([]);
 
-    const [isLoading, setLoading] = useState<boolean>(false);
+    const formHandler = async (event: React.ChangeEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-    const formHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
-        setLoading(true);
-    e.preventDefault();
-        setUserRequest(userRequest);
+        // retrieve form data
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
 
-        await UserApi.createUser(userRequest)
-            .then(async () => {
-                const token = await AuthApi.getToken({
-                    username: userRequest.email,
-                    password: userRequest.password,
+        // create the user request
+        const userRequest = {
+            email,
+            password
+        };
+
+        await formRequest<User>({
+            toast,
+            setErrors,
+            setLoading,
+            onRequest: UserApi.createUser(userRequest),
+            onSuccess: async (user) => {
+
+                // create the login request
+                const authRequest = {
+                    username: email,
+                    password: password,
                     longExpire: false
-                })
-                    .then((token) => {
-
-                        auth.signin(userRequest.email, token.data, () => { navigate('/') });
-                    })
-                    .catch((error) => {
-                        setLoading(false);
-    
-                        if (error.response) {
-                            setErrors(error.response.data);
-                            return;
-                        }
-
-                        toast({
-                            title: 'Communication Error',
-                            description: "Your request couldn't be completed, please try again later",
-                            status: 'error',
-                            duration: 10000,
-                            isClosable: true,
-                        })
-                    });
-
-            })
-            .catch((error) => {
-                setLoading(false);
-    
-                // handle validation errors
-                if (error.response) {
-                    setErrors(error.response.data);
-                    return;
                 }
 
-                // toast if a more generic error happened
-                console.log('Error', error.message);
-                toast({
-                    title: 'Communication Error',
-                    description: "Your request couldn't be completed, please try again later",
-                    status: 'error',
-                    duration: 10000,
-                    isClosable: true,
-                })
-            });
-    };
+                // login
+                await formRequest<string>({
+                    toast,
+                    setErrors,
+                    setLoading,
+                    onRequest: AuthApi.getToken(authRequest),
+                    onSuccess: (token) => {
+                        auth.signin(userRequest.email, token, () => navigate('/'));
+                    }
+                });
+            }
+        });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserRequest({ ...userRequest, [e.target.name]: e.target.value })
-    }
+    };
 
     return (
         <Container
@@ -148,11 +129,11 @@ export const RegisterPage = () => {
                             <Stack spacing="5">
                                 <FormControl isRequired>
                                     <FormLabel htmlFor="email">Email</FormLabel>
-                                    <Input id="email" name='email' type="email" value={userRequest.email} onChange={handleInputChange} />
+                                    <Input id="email" name='email' type="email" />
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel htmlFor="password">Password</FormLabel>
-                                    <Input id="password" name='password' type="text" value={userRequest.password} onChange={handleInputChange} />
+                                    <Input id="password" name='password' type="text" />
                                     <FormHelperText color="muted">Heads up, this field is unmasked</FormHelperText>
                                 </FormControl>
                             </Stack>

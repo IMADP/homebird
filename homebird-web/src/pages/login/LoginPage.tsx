@@ -14,6 +14,7 @@ import {
   useColorModeValue,
   useToast
 } from '@chakra-ui/react';
+import { formRequest } from 'api/api-client';
 import { AuthApi } from 'api/auth-api';
 import { Logo } from 'components/Logo';
 import { ValidationError, ValidationErrors } from 'components/validation/ValidationErrors';
@@ -37,37 +38,30 @@ export const LoginPage = () => {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // retrieve form data
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    setLoading(true);
-    await AuthApi.getToken({
+    // create the login request
+    const authRequest = {
       username: email,
       password: password,
       longExpire: false
-    })
-      .then((token) => {
-        auth.signin(email, token.data, () => { navigate(from, { replace: true }) });
-      })
-      .catch((error) => {
-        setLoading(false);
-        if (error.response) {
-          setErrors(error.response.data);
-          return;
-        }
+    }
 
-        toast({
-          title: 'Communication Error',
-          description: "Your request couldn't be completed, please try again later",
-          status: 'error',
-          duration: 10000,
-          isClosable: true,
-        })
-      });
+    // login
+    await formRequest<string>({
+      toast,
+      setErrors,
+      setLoading,
+      onRequest: AuthApi.getToken(authRequest),
+      onSuccess: (token) => {
+        auth.signin(email, token, () => { navigate(from, { replace: true }) });
+      }
+    });
 
-    // redirect to their original destination
-    //auth.signin(email, password, () => { navigate(from, { replace: true }) });
   }
 
   return (
@@ -84,7 +78,7 @@ export const LoginPage = () => {
     >
       <Stack spacing="8">
         <Stack spacing="6">
-          <Logo height="20"/>
+          <Logo height="20" />
           <Stack
             spacing={{
               base: '2',

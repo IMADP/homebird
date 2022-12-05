@@ -1,4 +1,4 @@
-import { ApiResponse, post } from "api/api-client";
+import { AxiosResponse, post } from "api/api-client";
 
 export interface AuthRequest {
   username: string;
@@ -7,6 +7,5 @@ export interface AuthRequest {
 }
 
 export const AuthApi = {
-  getToken: (request: AuthRequest): Promise<ApiResponse<string>> =>
-    post<string>("/auth/token", request),
+  getToken: (request: AuthRequest): Promise<AxiosResponse<string>> => post<string>("/auth/token", request),
 };

@@ -15,10 +15,6 @@ export interface ValidationErrorProps {
     errors: Array<ValidationError>;
 }
 
-const getKey = function (error: ValidationError): string {
-    return error.path.join(".") + "." + error;
-};
-
 const getMessage = function (error: ValidationError): string {
 
     if (error.error === 'inUse') {
@@ -54,8 +50,8 @@ export const ValidationErrors = (props: ValidationErrorProps) => {
                     <Alert status='warning'>
                         <AlertDescription>
                             <UnorderedList>
-                                {props.errors.map((e) =>
-                                    <ListItem key={getKey(e)} ml="5">{getMessage(e)}</ListItem>
+                                {props.errors.map((e, idx) =>
+                                    <ListItem key={idx} ml="5">{getMessage(e)}</ListItem>
                                 )}
                             </UnorderedList>
                         </AlertDescription>
