@@ -24,7 +24,7 @@ export const AccountSwitcherButton = (props: FlexProps) => {
       _focus={{ shadow: 'outline' }}
     >
       <HStack flex="1" spacing="3">
-        <Logo color="white" small={true} />
+        <Logo color="white" height="10" />
         <Box textAlign="start">
           <Box noOfLines={1} fontWeight="semibold">
             Shore House

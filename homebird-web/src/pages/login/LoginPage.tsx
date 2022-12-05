@@ -11,9 +11,13 @@ import {
   Stack,
   Text,
   useBreakpointValue,
-  useColorModeValue
+  useColorModeValue,
+  useToast
 } from '@chakra-ui/react';
+import { AuthApi } from 'api/auth-api';
 import { Logo } from 'components/Logo';
+import { ValidationError, ValidationErrors } from 'components/validation/ValidationErrors';
+import { useState } from 'react';
 import {
   Link,
   useLocation, useNavigate
@@ -25,17 +29,45 @@ export const LoginPage = () => {
   let navigate = useNavigate();
   let location = useLocation();
   let auth = useAuthContext();
+  const toast = useToast();
+  const [errors, setErrors] = useState<Array<ValidationError>>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   let from = location.state?.from?.pathname || "/";
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    
+
+    setLoading(true);
+    await AuthApi.getToken({
+      username: email,
+      password: password,
+      longExpire: false
+    })
+      .then((token) => {
+        auth.signin(email, token.data, () => { navigate(from, { replace: true }) });
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response) {
+          setErrors(error.response.data);
+          return;
+        }
+
+        toast({
+          title: 'Communication Error',
+          description: "Your request couldn't be completed, please try again later",
+          status: 'error',
+          duration: 10000,
+          isClosable: true,
+        })
+      });
+
     // redirect to their original destination
-    auth.signin(email, password, () => { navigate(from, { replace: true }) });
+    //auth.signin(email, password, () => { navigate(from, { replace: true }) });
   }
 
   return (
@@ -52,7 +84,7 @@ export const LoginPage = () => {
     >
       <Stack spacing="8">
         <Stack spacing="6">
-          <Logo />
+          <Logo height="20"/>
           <Stack
             spacing={{
               base: '2',
@@ -96,6 +128,8 @@ export const LoginPage = () => {
           }}
         >
           <form onSubmit={handleSubmit}>
+            <ValidationErrors errors={errors} />
+
             <Stack spacing="6">
               <Stack spacing="5">
                 <FormControl isRequired>
@@ -111,7 +145,7 @@ export const LoginPage = () => {
                 </Button>
               </HStack>
               <Stack spacing="6">
-                <Button variant="primary" type='submit'>Sign in</Button>
+                <Button isLoading={isLoading} variant="primary" type='submit'>Sign in</Button>
               </Stack>
             </Stack>
           </form>
