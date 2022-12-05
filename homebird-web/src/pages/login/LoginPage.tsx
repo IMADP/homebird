@@ -33,7 +33,7 @@ export const LoginPage = () => {
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-
+    
     // redirect to their original destination
     auth.signin(email, password, () => { navigate(from, { replace: true }) });
   }
@@ -98,9 +98,9 @@ export const LoginPage = () => {
           <form onSubmit={handleSubmit}>
             <Stack spacing="6">
               <Stack spacing="5">
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input id="email" type="email" required={false} />
+                  <Input id="email" name="email" type="email" required={false} />
                 </FormControl>
                 <PasswordField />
               </Stack>

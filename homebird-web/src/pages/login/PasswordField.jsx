@@ -24,7 +24,7 @@ export const PasswordField = React.forwardRef((props, ref) => {
     }
   }
   return (
-    <FormControl>
+    <FormControl isRequired>
       <FormLabel htmlFor="password">Password</FormLabel>
       <InputGroup>
         <InputRightElement>
