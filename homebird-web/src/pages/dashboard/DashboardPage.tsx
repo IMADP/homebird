@@ -26,8 +26,7 @@ const DashboardPage = () => {
             <AccountSwitcher />
             <Stack spacing="8" flex="1" overflow="auto" pt="8">
               <Stack spacing="1">
-                <NavItem active icon={<BiHome />} label="Get Started" />
-                <NavItem icon={<BiCommentAdd />} label="Inbox" />
+                <NavItem active icon={<BiHome />} label="Dashboard" />
               </Stack>
               <NavGroup label="Your Business">
                 <NavItem icon={<BiCreditCard />} label="Transactions" />

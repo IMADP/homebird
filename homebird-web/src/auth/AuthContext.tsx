@@ -6,7 +6,7 @@ import { fakeAuthProvider } from "./authProvider";
  * 
  */
 interface AuthContextType {
-  user: string;
+  email: string;
   token: string;
   signin: (email: string, password: string, callback: VoidFunction) => void;
   signout: (callback: VoidFunction) => void;
@@ -21,12 +21,12 @@ const AuthContext = createContext<AuthContextType>(null!);
  * @returns AuthContextProvider
  */
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
-  let [user, setUser] = useState<any>(null);
+  let [email, setEmail] = useState<any>(null);
   let [token, setToken] = useState<any>(null);
 
   let signin = (email: string, token: string, callback: VoidFunction) => {
     return fakeAuthProvider.signin(() => {
-      setUser(email);
+      setEmail(email);
       setToken(token);
       callback();
     });
@@ -34,13 +34,13 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
 
   let signout = (callback: VoidFunction) => {
     return fakeAuthProvider.signout(() => {
-      setUser(null);
+      setEmail(null);
       setToken(null);
       callback();
     });
   };
 
-  let value = { user, token, signin, signout };
+  let value = { email, token, signin, signout };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

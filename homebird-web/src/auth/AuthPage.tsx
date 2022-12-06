@@ -13,7 +13,7 @@ export default function AuthPage({ children }: { children: JSX.Element }) {
   const authContext = useAuthContext();
   const location = useLocation();
 
-  if (!authContext.user) {
+  if (!authContext.email) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
