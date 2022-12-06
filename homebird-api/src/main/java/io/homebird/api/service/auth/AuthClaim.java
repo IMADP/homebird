@@ -64,6 +64,10 @@ public class AuthClaim {
 		this.longExpiration = longExpiration;
 	}
 
+	public User toUser() {
+		return new User(userId);
+	}
+
 	/**
 	 * Returns true if this auth claim matches the values in the User object.
 	 * This method will return true if the authority, password date, and id are all identical.

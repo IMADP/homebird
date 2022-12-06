@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Sets;
 
+import io.homebird.api.service.auth.AuthClaim;
+import io.homebird.api.service.user.AbstractUserRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,14 +54,28 @@ public class Validator<V> {
 
 	/**
 	 * Peforms validation through javax.validation annotations.
-	 * 
+	 *
 	 * Subclasses can override this method to perform additional validation or delegate to other validators using <code>validateNested()</code>.
-	 * Subclasses should call <code>super.doValidation()</code> when overriding this method if they want to perform annotaiton validation. 
+	 * Subclasses should call <code>super.doValidation()</code> when overriding this method if they want to perform annotation validation.
 	 *
 	 * @param value
 	 * @param context
 	 */
 	protected void doValidation(V object, ValidationContext context) {
+
+		// validates modifications of user objects
+		if(object instanceof AbstractUserRequest) {
+			AuthClaim claim = AuthClaim.getCurrentClaim();
+			UUID userId = ((AbstractUserRequest) object).getUserId();
+
+			// only admins can modify other users
+			if(!claim.getAuthority().isAdmin() && !claim.getUserId().equals(userId)) {
+				context.addFieldError("userId", "accessDenied");
+			}
+
+		}
+
+		// validate annotations
 		for (ConstraintViolation<V> constraintViolation : annotationValidator.validate(object)) {
 			String field = constraintViolation.getPropertyPath().toString();
 			String error = constraintViolation.getMessage();

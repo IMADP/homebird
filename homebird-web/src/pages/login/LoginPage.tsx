@@ -44,19 +44,14 @@ export const LoginPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // create the login request
-    const authRequest = {
-      username: email,
-      password: password,
-      longExpire: false
-    }
-
     // login
     await formRequest<string>({
-      toast,
-      setErrors,
-      setLoading,
-      onRequest: AuthApi.getToken(authRequest),
+      toast, setErrors, setLoading,
+      onRequest: AuthApi.getToken({
+        username: email,
+        password: password,
+        longExpire: false
+      }),
       onSuccess: (token) => {
         auth.signin(email, token, () => { navigate(from, { replace: true }) });
       }

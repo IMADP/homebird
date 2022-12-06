@@ -26,28 +26,32 @@ import lombok.extern.slf4j.Slf4j;
 public class HomebirdApiAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ValidationException.class)
-	public ResponseEntity<?> handleValidationException(ValidationException ex) {
+	public ResponseEntity<?> handleValidationException(ValidationException ex, HttpServletRequest request) {
+		log.error(String.format("Error processing [%s]", request.getRequestURI()), ex);
 		return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex) {
+	public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
+		log.error(String.format("Error processing [%s]", request.getRequestURI()), ex);
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
+	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
+		log.error(String.format("Error processing [%s]", request.getRequestURI()), ex);
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(OptimisticLockingFailureException.class)
-	public ResponseEntity<?> handleOptimisticLockingFailureException(OptimisticLockingFailureException ex) {
+	public ResponseEntity<?> handleOptimisticLockingFailureException(OptimisticLockingFailureException ex, HttpServletRequest request) {
+		log.error(String.format("Error processing [%s]", request.getRequestURI()), ex);
 		return new ResponseEntity<>(HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception ex, HttpServletRequest request) {
-		log	.error(String.format("Error processing [%s]", request.getRequestURI()), ex);
+		log.error(String.format("Error processing [%s]", request.getRequestURI()), ex);
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

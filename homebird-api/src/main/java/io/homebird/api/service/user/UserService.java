@@ -156,14 +156,14 @@ public class UserService {
 	 * @return User
 	 */
 	@Transactional
-	public User updateEmail(UUID userId, UserEmailRequest request) {
-		log.debug("Updating email for user [{}]", userId);
+	public User updateEmail(UUID id, UserEmailRequest request) {
+		log.debug("Updating email for user [{}]", id);
 
 		// validate the request
 		validator.validate(request);
 
 		// update the user
-		User user = userRepository.getById(userId);
+		User user = userRepository.getById(id);
 		user.setEmail(request.getEmail());
 		user.setVerifyToken(UUID.randomUUID());
 		user.setVerified(false);
@@ -176,9 +176,9 @@ public class UserService {
 	 * @param userId
 	 */
 	@Transactional
-	public void sendResetEmail(UUID userId) {
-		log.debug("Sending reset email for user [{}]", userId);
-		User user = userRepository.getById(userId);
+	public void sendResetEmail(UUID id) {
+		log.debug("Sending reset email for user [{}]", id);
+		User user = userRepository.getById(id);
 
 		// update reset token
 		user.setResetToken(UUID.randomUUID());
@@ -219,14 +219,14 @@ public class UserService {
 	 * @return User
 	 */
 	@Transactional
-	public User updatePassword(UUID userId, UserPasswordRequest request) {
-		log.debug("Updating password for user [{}]", userId);
+	public User updatePassword(UUID id, UserPasswordRequest request) {
+		log.debug("Updating password for user [{}]", id);
 
 		// validate the request
 		validator.validate(request);
 
 		// update the user
-		User user = userRepository.getById(userId);
+		User user = userRepository.getById(id);
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.setPasswordDate(Instant.now());
 		return saveUser(user);

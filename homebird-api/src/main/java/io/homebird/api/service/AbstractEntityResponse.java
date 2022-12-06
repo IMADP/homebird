@@ -26,6 +26,11 @@ public abstract class AbstractEntityResponse {
 	private Instant timeModified;
 
 	// constructor
+	public AbstractEntityResponse() {
+
+	}
+
+	// constructor
 	public AbstractEntityResponse(AbstractEntity entity) {
 		this.id = entity.getId();
 		this.version = entity.getVersion();
