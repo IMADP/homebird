@@ -22,10 +22,10 @@ public class AuthController {
 	// properties
 	private final AuthService authService;
 
-	@PostMapping("token")
-	public String getToken(@RequestBody AuthRequest authRequest) {
+	@PostMapping("login")
+	public AuthResponse login(@RequestBody AuthRequest authRequest) {
 		log.info("Get token for user [{}]", authRequest.getUsername());
-		return authService.getToken(authRequest);
+		return authService.authenticate(authRequest);
 	}
 
 }

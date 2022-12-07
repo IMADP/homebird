@@ -18,7 +18,7 @@ import io.jsonwebtoken.Jws;
 
 /**
  * AuthServiceTest
- * 
+ *
  * @author Anthony DePalma
  */
 public class AuthServiceTest extends HomebirdApiTest {
@@ -44,7 +44,7 @@ public class AuthServiceTest extends HomebirdApiTest {
 		authRequest.setPassword(userRequest.getPassword());
 		authRequest.setLongExpire(false);
 
-		String token = authService.getToken(authRequest);
+		String token = authService.authenticate(authRequest).getToken();
 		Jws<Claims> jws = authService.parseToken(token);
 		AuthClaim claim = jws.getBody().get(AuthClaim.KEY, AuthClaim.class);
 

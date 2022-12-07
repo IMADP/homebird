@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * HomeResponse
+ * AuthResponse
  *
  * @author Anthony DePalma
  */

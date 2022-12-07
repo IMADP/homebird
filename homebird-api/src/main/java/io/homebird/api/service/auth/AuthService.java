@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import io.homebird.api.HomebirdApiProperties;
 import io.homebird.api.service.user.User;
+import io.homebird.api.service.user.UserResponse;
 import io.homebird.api.service.user.UserService;
 import io.homebird.api.validation.Validator;
 import io.jsonwebtoken.Claims;
@@ -47,11 +48,11 @@ public class AuthService {
 	private final Validator<Object> validator;
 
 	/**
-	 * Returns a token if the request was valid.
+	 * Logs in an returns an auth response if the request was valid.
 	 *
 	 * @param request
 	 */
-	public String getToken(AuthRequest request) {
+	public AuthResponse authenticate(AuthRequest request) {
 
 		// validate the request
 		validator.validate(request);
@@ -59,8 +60,14 @@ public class AuthService {
 		// authenticate the user
 		User user = userService.authenticateUser(request.getUsername(), request.getPassword());
 
-		// return a new token
-		return createToken(user, request.isLongExpire());
+		// create a new token
+		String token = createToken(user, request.isLongExpire());
+
+		// return the auth response
+		AuthResponse response = new AuthResponse();
+		response.setUser(new UserResponse(user));
+		response.setToken(token);
+		return response;
 	}
 
 	/**
