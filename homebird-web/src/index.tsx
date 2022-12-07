@@ -6,9 +6,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthContextProvider } from "./auth/AuthContext";
 import AuthPage from "./auth/AuthPage";
 import './index.css';
-import DashboardPage from "./pages/dashboard/DashboardPage";
-import { LoginPage } from "./pages/login/LoginPage";
-import { RegisterPage } from "./pages/register/RegisterPage";
+import DashboardPage from "pages/dashboard";
+import { LoginPage } from "pages/login";
+import { RegisterPage } from "pages/register";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

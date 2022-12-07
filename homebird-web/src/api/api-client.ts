@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { ValidationError } from "components/validation/ValidationErrors";
+import { ValidationError } from "features/ui/validation/ValidationErrors";
 const apiClient = axios.create({
   baseURL: "http://localhost:8080/api",
   responseType: "json",

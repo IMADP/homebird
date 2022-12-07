@@ -13,9 +13,9 @@ import {
   BiUserCircle,
   BiWallet
 } from 'react-icons/bi'
-import { AccountSwitcher } from './AccountSwitcher'
-import { NavGroup } from './NavGroup'
-import { NavItem } from './NavItem'
+import { AccountSwitcher } from 'features/ui/layout/AccountSwitcher'
+import { NavGroup } from 'features/ui/layout/NavGroup'
+import { NavItem } from 'features/ui/layout/NavItem'
 
 const DashboardPage = () => {
   return (

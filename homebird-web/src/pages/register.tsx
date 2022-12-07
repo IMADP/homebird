@@ -15,7 +15,8 @@ import { AuthApi } from 'api/auth-api';
 import { User, UserApi } from 'api/user-api';
 import { useAuthContext } from 'auth/AuthContext';
 import { Logo } from 'components/Logo';
-import { ValidationError, ValidationErrors } from 'components/validation/ValidationErrors';
+import { PasswordField } from 'components/PasswordField';
+import { ValidationError, ValidationErrors } from 'features/ui/validation/ValidationErrors';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -132,9 +133,8 @@ export const RegisterPage = () => {
                                     <Input id="email" name='email' type="email" />
                                 </FormControl>
                                 <FormControl isRequired>
-                                    <FormLabel htmlFor="password">Password</FormLabel>
-                                    <Input id="password" name='password' type="text" />
-                                    <FormHelperText color="muted">Heads up, this field is unmasked</FormHelperText>
+                                    <PasswordField />
+                                    <FormHelperText color="muted">Toggle the icon to confirm your password</FormHelperText>
                                 </FormControl>
                             </Stack>
                             <Stack spacing="4">

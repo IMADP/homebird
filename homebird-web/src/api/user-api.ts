@@ -16,6 +16,6 @@ export interface TimeZone {
 }
 
 export const UserApi = {
-  createUser: (userRequest: UserRequest): Promise<AxiosResponse<User>> =>
-    post<User>("/user", userRequest),
+  createUser: (request: UserRequest): Promise<AxiosResponse<User>> =>
+    post<User>("/user", request),
 };

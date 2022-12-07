@@ -17,14 +17,14 @@ import {
 import { formRequest } from 'api/api-client';
 import { AuthApi } from 'api/auth-api';
 import { Logo } from 'components/Logo';
-import { ValidationError, ValidationErrors } from 'components/validation/ValidationErrors';
+import { ValidationError, ValidationErrors } from 'features/ui/validation/ValidationErrors';
 import { useState } from 'react';
 import {
   Link,
   useLocation, useNavigate
 } from "react-router-dom";
-import { useAuthContext } from '../../auth/AuthContext';
-import { PasswordField } from './PasswordField';
+import { useAuthContext } from '../auth/AuthContext';
+import { PasswordField } from '../components/PasswordField';
 
 export const LoginPage = () => {
   let navigate = useNavigate();
