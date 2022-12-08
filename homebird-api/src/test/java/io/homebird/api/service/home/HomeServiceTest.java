@@ -13,9 +13,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import io.homebird.api.HomebirdApiTest;
-import io.homebird.api.service.auth.AuthClaim;
 import io.homebird.api.service.user.User;
 import io.homebird.api.service.user.UserAuthority;
+import io.homebird.api.service.user.UserClaim;
 import io.homebird.api.service.user.UserRequest;
 import io.homebird.api.service.user.UserService;
 
@@ -42,7 +42,7 @@ public class HomeServiceTest extends HomebirdApiTest {
 		User user = userService.createUser(userRequest, UserAuthority.ROLE_USER);
 
 		// set authentication
-		AuthClaim claim = new AuthClaim(user, false);
+		UserClaim claim = new UserClaim(user, false);
 		List<GrantedAuthority> authorities = Arrays.asList(claim.getAuthority());
 		Authentication authentication = new UsernamePasswordAuthenticationToken(claim, null, authorities);
 		SecurityContextHolder.getContext().setAuthentication(authentication);

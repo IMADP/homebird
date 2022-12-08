@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.homebird.api.service.auth.AuthClaim;
+import io.homebird.api.service.user.UserClaim;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -31,8 +31,8 @@ public class HomeController {
 	private final HomeService homeService;
 
 	@GetMapping
-	public List<HomeResponse> getHomes(@AuthenticationPrincipal AuthClaim authClaim) {
-		List<Home> homes = homeService.findHomesByUser(authClaim.getUserId());
+	public List<HomeResponse> getHomes(@AuthenticationPrincipal UserClaim userClaim) {
+		List<Home> homes = homeService.findHomesByUser(userClaim.getUserId());
 		return homeMapper.toResponses(homes);
 	}
 

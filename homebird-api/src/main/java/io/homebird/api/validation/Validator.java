@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Sets;
 
-import io.homebird.api.service.auth.AuthClaim;
 import io.homebird.api.service.user.AbstractUserRequest;
+import io.homebird.api.service.user.UserClaim;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -65,7 +65,7 @@ public class Validator<V> {
 
 		// validates modifications of user objects
 		if(object instanceof AbstractUserRequest) {
-			AuthClaim claim = AuthClaim.getCurrentClaim();
+			UserClaim claim = UserClaim.getCurrentClaim();
 			UUID userId = ((AbstractUserRequest) object).getUserId();
 
 			// only admins can modify other users

@@ -1,4 +1,4 @@
-package io.homebird.api.service.auth;
+package io.homebird.api.service.user;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,15 +9,13 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import io.homebird.api.HomebirdApiTest;
-import io.homebird.api.service.user.User;
-import io.homebird.api.service.user.UserAuthority;
 
 /**
- * AuthClaimTest
- * 
+ * UserClaimTest
+ *
  * @author Anthony DePalma
  */
-public class AuthClaimTest extends HomebirdApiTest {
+public class UserClaimTest extends HomebirdApiTest {
 
 	@Test
 	public void isMatch() {
@@ -26,7 +24,7 @@ public class AuthClaimTest extends HomebirdApiTest {
 		user.setPasswordDate(Instant.now());
 		user.setAuthority(UserAuthority.ROLE_USER);
 
-		AuthClaim claim = new AuthClaim(user, false);
+		UserClaim claim = new UserClaim(user, false);
 		assertTrue(claim.isMatch(user));
 	}
 
@@ -37,7 +35,7 @@ public class AuthClaimTest extends HomebirdApiTest {
 		user.setPasswordDate(Instant.now());
 		user.setAuthority(UserAuthority.ROLE_USER);
 
-		AuthClaim claim = new AuthClaim(user, false);
+		UserClaim claim = new UserClaim(user, false);
 		assertTrue(claim.isMatch(user));
 
 		user.setPasswordDate(Instant.now().plusSeconds(10));
@@ -51,7 +49,7 @@ public class AuthClaimTest extends HomebirdApiTest {
 		user.setPasswordDate(Instant.now());
 		user.setAuthority(UserAuthority.ROLE_USER);
 
-		AuthClaim claim = new AuthClaim(user, false);
+		UserClaim claim = new UserClaim(user, false);
 		assertTrue(claim.isMatch(user));
 
 		user.setAuthority(UserAuthority.ROLE_GUEST);
@@ -65,7 +63,7 @@ public class AuthClaimTest extends HomebirdApiTest {
 		user.setPasswordDate(Instant.now());
 		user.setAuthority(UserAuthority.ROLE_USER);
 
-		AuthClaim claim = new AuthClaim(user, false);
+		UserClaim claim = new UserClaim(user, false);
 		assertTrue(claim.isMatch(user));
 
 		user.setId(UUID.randomUUID());

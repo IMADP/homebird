@@ -1,21 +1,21 @@
-package io.homebird.api.service.auth;
+package io.homebird.api.service.user;
 
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
 /**
- * AuthRequest
+ * UserTokenRequest
  *
  * Request object to obtain an authorization token.
  *
  * @author Anthony DePalma
  */
 @Data
-public class AuthRequest {
+public class UserTokenRequest {
 
 	@NotNull
-	private String username;
+	private String email;
 
 	@NotNull
 	private String password;

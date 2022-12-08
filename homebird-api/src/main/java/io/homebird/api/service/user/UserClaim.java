@@ -1,20 +1,22 @@
-package io.homebird.api.service.auth;
+package io.homebird.api.service.user;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.homebird.api.service.user.User;
-import io.homebird.api.service.user.UserAuthority;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * AuthClaim
+ * UserClaim
  *
  * Encapsulates all the claim details stored inside a jwt.
  * The json property names are kept short as this object is serialized and sent with every request.
@@ -24,19 +26,19 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class AuthClaim {
+public class UserClaim {
 
 	// the jwt auth claim key
 	public static final String KEY = "clm";
 
 	/**
-	 * Returns the current AuthClaim from the SecurityContext.
+	 * Returns the current UserClaim from the SecurityContext.
 	 *
-	 * @return AuthClaim
+	 * @return UserClaim
 	 */
-	public static AuthClaim getCurrentClaim() {
+	public static UserClaim getCurrentClaim() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return (AuthClaim) authentication.getPrincipal();
+		return (UserClaim) authentication.getPrincipal();
 	}
 
 	@JsonProperty("uid")
@@ -52,20 +54,27 @@ public class AuthClaim {
 	private boolean longExpiration;
 
 	// constructor
-	public AuthClaim() {
+	public UserClaim() {
 
 	}
 
 	// constructor
-	public AuthClaim(User user, boolean longExpiration) {
+	public UserClaim(User user, boolean longExpiration) {
 		this.userId = user.getId();
 		this.authority = user.getAuthority();
 		this.passwordDate = user.getPasswordDate().getEpochSecond();
 		this.longExpiration = longExpiration;
 	}
 
-	public User toUser() {
-		return new User(userId);
+	/**
+	 * Converts the claim to an Authentication object.
+	 *
+	 * @return Authentication
+	 */
+	public Authentication toAuthentication() {
+		List<GrantedAuthority> authorities = Arrays.asList(getAuthority());
+		Authentication authentication = new UsernamePasswordAuthenticationToken(this, null, authorities);
+		return authentication;
 	}
 
 	/**

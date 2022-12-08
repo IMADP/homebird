@@ -11,7 +11,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import io.homebird.api.service.auth.AuthFilter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class HomebirdApiSecurity extends WebSecurityConfigurerAdapter {
 
 	// properties
-	private final AuthFilter authFilter;
+	private final HomebirdApiSecurityFilter homebirdApiSecurityFilter;
 	private final HomebirdApiProperties properties;
 
 	@Override
@@ -35,7 +34,7 @@ public class HomebirdApiSecurity extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST, "/api/user").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 		.antMatchers("/api/**").authenticated().and()
-		.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+		.addFilterBefore(homebirdApiSecurityFilter, UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 

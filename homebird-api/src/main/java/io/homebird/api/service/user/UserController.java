@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.homebird.api.service.auth.AuthClaim;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -42,7 +41,7 @@ public class UserController {
 
 	@PutMapping("/{id}/email")
 	public UserResponse updateEmail(@PathVariable UUID id, @RequestBody UserEmailRequest request) {
-		AuthClaim claim = AuthClaim.getCurrentClaim();
+		UserClaim claim = UserClaim.getCurrentClaim();
 
 		// only admins can modify other users
 		if(!claim.getAuthority().isAdmin() && !claim.getUserId().equals(id))
@@ -54,7 +53,7 @@ public class UserController {
 
 	@PutMapping("/{id}/password")
 	public UserResponse updatePassword(@PathVariable UUID id, @RequestBody UserPasswordRequest request) {
-		AuthClaim claim = AuthClaim.getCurrentClaim();
+		UserClaim claim = UserClaim.getCurrentClaim();
 
 		// only admins can modify other users
 		if(!claim.getAuthority().isAdmin() && !claim.getUserId().equals(id))
@@ -68,6 +67,11 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<User> getUsers() {
 		return userService.findUsers();
+	}
+
+	@PostMapping("token")
+	public UserTokenResponse getToken(@RequestBody UserTokenRequest request) {
+		return userService.getToken(request);
 	}
 
 }

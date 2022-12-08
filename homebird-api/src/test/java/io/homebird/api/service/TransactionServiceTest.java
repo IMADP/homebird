@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.homebird.api.HomebirdApiTest;
 import io.homebird.api.service.user.UserRequest;
 import io.homebird.api.service.user.UserService;
+import io.homebird.api.service.user.UserTokenRequest;
 import io.homebird.api.validation.ValidationException;
 
 /**
@@ -24,11 +25,12 @@ public class TransactionServiceTest extends HomebirdApiTest {
 
 	@Test
 	public void publicTransaction() {
-		String email = "user@email.com";
-		String password = "password";
+		UserTokenRequest tokenRequest = new UserTokenRequest();
+		tokenRequest.setEmail("user@email.com");
+		tokenRequest.setPassword("password");
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 
 		assertThrows(ValidationException.class, () -> {
@@ -37,17 +39,18 @@ public class TransactionServiceTest extends HomebirdApiTest {
 		});
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 	}
 
 	@Test
 	public void protectedTransaction() {
-		String email = "user@email.com";
-		String password = "password";
+		UserTokenRequest tokenRequest = new UserTokenRequest();
+		tokenRequest.setEmail("user@email.com");
+		tokenRequest.setPassword("password");
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 
 		assertThrows(ValidationException.class, () -> {
@@ -56,17 +59,18 @@ public class TransactionServiceTest extends HomebirdApiTest {
 		});
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 	}
 
 	@Test
 	public void privateTransaction() {
-		String email = "user@email.com";
-		String password = "password";
+		UserTokenRequest tokenRequest = new UserTokenRequest();
+		tokenRequest.setEmail("user@email.com");
+		tokenRequest.setPassword("password");
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 
 		assertThrows(ValidationException.class, () -> {
@@ -75,17 +79,18 @@ public class TransactionServiceTest extends HomebirdApiTest {
 		});
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 	}
 
 	@Test
 	public void finalTransaction() {
-		String email = "user@email.com";
-		String password = "password";
+		UserTokenRequest tokenRequest = new UserTokenRequest();
+		tokenRequest.setEmail("user@email.com");
+		tokenRequest.setPassword("password");
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 
 		assertThrows(ValidationException.class, () -> {
@@ -94,7 +99,7 @@ public class TransactionServiceTest extends HomebirdApiTest {
 		});
 
 		assertThrows(ValidationException.class, () -> {
-			userService.authenticateUser(email, password);
+			userService.getToken(tokenRequest);
 		});
 	}
 
