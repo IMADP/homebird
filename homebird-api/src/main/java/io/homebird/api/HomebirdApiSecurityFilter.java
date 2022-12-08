@@ -38,9 +38,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HomebirdApiSecurityFilter extends OncePerRequestFilter {
 
-	// the authorization prefix
-	private static final String AUTH_PREFIX = "Bearer ";
-
 	// properties
 	private final UserService userService;
 
@@ -49,7 +46,7 @@ public class HomebirdApiSecurityFilter extends OncePerRequestFilter {
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 		// continue along the filter chain if no bearer token was provided
-		if (authorization == null || !authorization.startsWith(AUTH_PREFIX)) {
+		if (authorization == null || !authorization.startsWith("Bearer")) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -57,7 +54,7 @@ public class HomebirdApiSecurityFilter extends OncePerRequestFilter {
 		try
 		{
 			// parse the jwt token
-			String token = authorization.substring(AUTH_PREFIX.length());
+			String token = authorization.substring("Bearer".length());
 			Jws<Claims> jws = userService.parseToken(token);
 
 			// validate the jwt token
@@ -76,7 +73,7 @@ public class HomebirdApiSecurityFilter extends OncePerRequestFilter {
 
 			// update the token to extend the expiration
 			String newToken = userService.renewToken(jws, valid.isPresent() && valid.get().booleanValue());
-			response.addHeader(HttpHeaders.AUTHORIZATION, AUTH_PREFIX + newToken);
+			response.addHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", newToken));
 
 			// continue along the filter chain
 			chain.doFilter(request, response);
@@ -85,7 +82,7 @@ public class HomebirdApiSecurityFilter extends OncePerRequestFilter {
 		{
 			// exceptions from invalid tokens correspond to status code 401 UNAUTHORIZED
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
-			response.addHeader(HttpHeaders.WWW_AUTHENTICATE, AUTH_PREFIX.trim());
+			response.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer");
 		}
 
 	}

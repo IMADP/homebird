@@ -32,7 +32,7 @@ public class HomebirdApiSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/api/user").permitAll()
-		.antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/user/token").permitAll()
 		.antMatchers("/api/**").authenticated().and()
 		.addFilterBefore(homebirdApiSecurityFilter, UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

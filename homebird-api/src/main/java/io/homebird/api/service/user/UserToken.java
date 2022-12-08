@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * UserTokenResponse
+ * UserToken
  *
  * @author Anthony DePalma
  */
 @Getter
 @Setter
-public class UserTokenResponse {
+public class UserToken {
+
+	private User user;
 
 	private String token;
-
-	private UserResponse user;
 
 }

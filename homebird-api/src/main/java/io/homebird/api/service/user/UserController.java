@@ -3,6 +3,8 @@ package io.homebird.api.service.user;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.net.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
 
@@ -70,8 +74,10 @@ public class UserController {
 	}
 
 	@PostMapping("token")
-	public UserTokenResponse getToken(@RequestBody UserTokenRequest request) {
-		return userService.getToken(request);
+	public UserResponse getToken(@RequestBody UserTokenRequest request, HttpServletResponse response) {
+		UserToken token = userService.getToken(request);
+		response.addHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", token.getToken()));
+		return new UserResponse(token.getUser());
 	}
 
 }

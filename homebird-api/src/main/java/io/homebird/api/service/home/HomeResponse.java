@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * UserTokenResponse
+ * UserToken
  *
  * @author Anthony DePalma
  */

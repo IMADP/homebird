@@ -241,17 +241,18 @@ public class UserService {
 	}
 
 	/**
-	 * Returns an authentication token if the request was valid.
+	 * Returns an authentication token for a valid user request.
+	 * This is essentially the login functionality of the application.
 	 *
 	 * @param request
-	 * @return UserTokenResponse
+	 * @return UserToken
 	 */
-	public UserTokenResponse getToken(UserTokenRequest request) {
+	public UserToken getToken(UserTokenRequest request) {
 
 		// validate the request
 		validator.validate(request);
 
-		// authenticate the user
+		// find the user
 		Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
 
 		// validate the authentication attempt
@@ -272,9 +273,9 @@ public class UserService {
 		// create a new token
 		String token = createToken(user, request.isLongExpire());
 
-		// return the auth response
-		UserTokenResponse response = new UserTokenResponse();
-		response.setUser(new UserResponse(user));
+		// return the token response
+		UserToken response = new UserToken();
+		response.setUser(user);
 		response.setToken(token);
 		return response;
 	}

@@ -29,7 +29,7 @@ public interface HomeMapper {
 	 * Converts a home to a response.
 	 *
 	 * @param home
-	 * @return UserTokenResponse
+	 * @return UserToken
 	 */
 	public HomeResponse toResponse(Home home);
 
@@ -37,7 +37,7 @@ public interface HomeMapper {
 	 * Converts a list of homes to responses.
 	 *
 	 * @param homes
-	 * @return List<UserTokenResponse>
+	 * @return List<UserToken>
 	 */
 	public List<HomeResponse> toResponses(List<Home> homes);
 
