@@ -32,6 +32,19 @@ public class UserController {
 	// properties
 	private final UserService userService;
 
+	@GetMapping
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public List<User> getUsers() {
+		return userService.findUsers();
+	}
+
+	@PostMapping("token")
+	public UserResponse getToken(@RequestBody UserTokenRequest request, HttpServletResponse response) {
+		UserToken token = userService.getToken(request);
+		response.addHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", token.getToken()));
+		return new UserResponse(token.getUser());
+	}
+
 	@PostMapping
 	public UserResponse createUser(@RequestBody UserRequest request) {
 		User user = userService.createUser(request, UserAuthority.ROLE_USER);
@@ -45,39 +58,30 @@ public class UserController {
 
 	@PutMapping("/{id}/email")
 	public UserResponse updateEmail(@PathVariable UUID id, @RequestBody UserEmailRequest request) {
-		UserClaim claim = UserClaim.getCurrentClaim();
-
-		// only admins can modify other users
-		if(!claim.getAuthority().isAdmin() && !claim.getUserId().equals(id))
-			throw new AccessDeniedException(String.valueOf(id));
-
+		validateUserAccess(id);
 		User user = userService.updateEmail(id, request);
 		return new UserResponse(user);
 	}
 
 	@PutMapping("/{id}/password")
 	public UserResponse updatePassword(@PathVariable UUID id, @RequestBody UserPasswordRequest request) {
-		UserClaim claim = UserClaim.getCurrentClaim();
-
-		// only admins can modify other users
-		if(!claim.getAuthority().isAdmin() && !claim.getUserId().equals(id))
-			throw new AccessDeniedException(String.valueOf(id));
-
+		validateUserAccess(id);
 		User user = userService.updatePassword(id, request);
 		return new UserResponse(user);
 	}
 
-	@GetMapping
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public List<User> getUsers() {
-		return userService.findUsers();
-	}
+	/**
+	 * Ensures that only users can modify their own data.
+	 *
+	 * @param id
+	 */
+	private void validateUserAccess(UUID id) {
+		UserClaim claim = UserClaim.getCurrentClaim();
 
-	@PostMapping("token")
-	public UserResponse getToken(@RequestBody UserTokenRequest request, HttpServletResponse response) {
-		UserToken token = userService.getToken(request);
-		response.addHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", token.getToken()));
-		return new UserResponse(token.getUser());
+		// only admins can modify other users
+		if(!claim.getAuthority().isAdmin() && !claim.getUserId().equals(id)) {
+			throw new AccessDeniedException(String.valueOf(id));
+		}
 	}
 
 }
