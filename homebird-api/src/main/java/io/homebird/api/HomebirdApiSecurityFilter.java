@@ -1,6 +1,8 @@
 package io.homebird.api;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.FilterChain;
@@ -9,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -65,7 +70,9 @@ public class HomebirdApiSecurityFilter extends OncePerRequestFilter {
 
 			// store the authentication details into the security context
 			UserClaim claim = jws.getBody().get(UserClaim.KEY, UserClaim.class);
-			SecurityContextHolder.getContext().setAuthentication(claim.toAuthentication());
+			List<GrantedAuthority> authorities = Arrays.asList(claim.getAuthority());
+			Authentication authentication = new UsernamePasswordAuthenticationToken(claim, null, authorities);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			// update the token to extend the expiration
 			String newToken = userService.renewToken(jws, valid.isPresent() && valid.get().booleanValue());

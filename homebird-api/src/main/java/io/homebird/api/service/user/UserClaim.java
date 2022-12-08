@@ -1,13 +1,9 @@
 package io.homebird.api.service.user;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,17 +60,6 @@ public class UserClaim {
 		this.authority = user.getAuthority();
 		this.passwordDate = user.getPasswordDate().getEpochSecond();
 		this.longExpiration = longExpiration;
-	}
-
-	/**
-	 * Converts the claim to an Authentication object.
-	 *
-	 * @return Authentication
-	 */
-	public Authentication toAuthentication() {
-		List<GrantedAuthority> authorities = Arrays.asList(getAuthority());
-		Authentication authentication = new UsernamePasswordAuthenticationToken(this, null, authorities);
-		return authentication;
 	}
 
 	/**
