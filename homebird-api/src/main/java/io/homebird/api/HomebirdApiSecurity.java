@@ -43,6 +43,7 @@ public class HomebirdApiSecurity extends WebSecurityConfigurerAdapter {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 		corsConfiguration.addAllowedHeader("*");
+		corsConfiguration.addExposedHeader("Authorization");
 		corsConfiguration.addAllowedOrigin(properties.getCorsAllowedOrigin());
 		corsConfiguration.addAllowedMethod(HttpMethod.GET);
 		corsConfiguration.addAllowedMethod(HttpMethod.PUT);
