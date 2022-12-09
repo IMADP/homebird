@@ -15,7 +15,7 @@ import {
   useToast
 } from '@chakra-ui/react';
 import { formRequest } from 'api/api-client';
-import { Logo } from 'features/Logo';
+import { Logo } from 'features/ui/Logo';
 import { ValidationError, ValidationErrors } from 'features/ui/validation/ValidationErrors';
 import { UserApi, useUser } from 'features/user';
 import { User } from 'features/user/user-api';
@@ -24,7 +24,7 @@ import {
   Link,
   useLocation, useNavigate
 } from "react-router-dom";
-import { PasswordField } from '../features/PasswordField';
+import { PasswordField } from '../features/ui/PasswordField';
 
 /**
  * LoginPage

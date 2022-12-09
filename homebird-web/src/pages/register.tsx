@@ -13,8 +13,8 @@ import {
 import { formRequest } from 'api/api-client';
 import { User, UserApi } from 'features/user/user-api';
 import { useUser } from 'features/user';
-import { Logo } from 'features/Logo'; 
-import { PasswordField } from 'features/PasswordField';
+import { Logo } from 'features/ui/Logo'; 
+import { PasswordField } from 'features/ui/PasswordField';
 import { ValidationError, ValidationErrors } from 'features/ui/validation/ValidationErrors';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
