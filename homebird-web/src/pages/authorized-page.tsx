@@ -1,19 +1,19 @@
+import { useUser } from 'features/user';
 import {
   Navigate, useLocation
 } from "react-router-dom";
-import { useAuthContext } from "./AuthContext";
 
 /**
- * AuthPage
+ * AuthorizedPage
  * 
  * @param children 
  * @returns children
  */
-export default function AuthPage({ children }: { children: JSX.Element }) {
-  const authContext = useAuthContext();
+export function AuthorizedPage({ children }: { children: JSX.Element }) {
+  const userContext = useUser();
   const location = useLocation();
 
-  if (!authContext.email) {
+  if (!userContext.token) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

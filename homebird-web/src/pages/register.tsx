@@ -11,11 +11,10 @@ import {
     Text, useBreakpointValue, useColorModeValue, useToast
 } from '@chakra-ui/react';
 import { formRequest } from 'api/api-client';
-import { AuthApi } from 'api/auth-api';
-import { User, UserApi } from 'api/user-api';
-import { useAuthContext } from 'auth/AuthContext';
-import { Logo } from 'components/Logo';
-import { PasswordField } from 'components/PasswordField';
+import { User, UserApi } from 'features/user/user-api';
+import { useUser } from 'features/user';
+import { Logo } from 'features/Logo'; 
+import { PasswordField } from 'features/PasswordField';
 import { ValidationError, ValidationErrors } from 'features/ui/validation/ValidationErrors';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -29,8 +28,8 @@ export const RegisterPage = () => {
 
     // hooks
     const navigate = useNavigate();
-    const auth = useAuthContext();
     const toast = useToast();
+    const userContext = useUser();
 
     // state
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -51,27 +50,30 @@ export const RegisterPage = () => {
         };
 
         await formRequest<User>({
+            userContext,
             toast,
             setErrors,
             setLoading,
             onRequest: UserApi.createUser(userRequest),
-            onSuccess: async (user) => {
+            onSuccess: async () => {
 
                 // create the login request
-                const authRequest = {
-                    username: email,
+                const userTokenRequest = {
+                    email: email,
                     password: password,
                     longExpire: false
                 }
 
                 // login
-                await formRequest<string>({
+                await formRequest<User>({
+                    userContext,
                     toast,
                     setErrors,
                     setLoading,
-                    onRequest: AuthApi.getToken(authRequest),
-                    onSuccess: (token) => {
-                        auth.signin(userRequest.email, token, () => navigate('/'));
+                    onRequest: UserApi.getToken(userTokenRequest),
+                    onSuccess: (user) => {
+                        userContext.setUser(user);
+                        navigate('/');
                     }
                 });
             }

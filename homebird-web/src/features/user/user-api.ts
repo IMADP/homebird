@@ -3,6 +3,7 @@ import { AxiosResponse, post } from "api/api-client";
 export interface User {
   id: string;
   email: string;
+  authority: string;
 }
 
 export interface UserRequest {
@@ -16,6 +17,8 @@ export interface TimeZone {
 }
 
 export const UserApi = {
+  getToken: (request: UserRequest): Promise<AxiosResponse<User>> =>
+    post<User>("/user/token", request),
   createUser: (request: UserRequest): Promise<AxiosResponse<User>> =>
     post<User>("/user", request),
 };

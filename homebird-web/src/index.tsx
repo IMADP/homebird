@@ -1,14 +1,11 @@
 import { theme } from '@chakra-ui/pro-theme';
 import { ChakraProvider } from '@chakra-ui/react';
+import { UserContextProvider } from 'features/user';
+import { AuthorizedPage, DashboardPage, LoginPage, RegisterPage } from "pages";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AuthContextProvider } from "./auth/AuthContext";
-import AuthPage from "./auth/AuthPage";
 import './index.css';
-import DashboardPage from "pages/dashboard";
-import { LoginPage } from "pages/login";
-import { RegisterPage } from "pages/register";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,21 +14,25 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <AuthContextProvider>
+      <UserContextProvider>
         <BrowserRouter>
           <Routes>
             <Route>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login" element={
+                <LoginPage />
+              } />
+              <Route path="/register" element={
+                <RegisterPage />
+              } />
               <Route path="/" element={
-                <AuthPage>
+                <AuthorizedPage>
                   <DashboardPage />
-                </AuthPage>
+                </AuthorizedPage>
               } />
             </Route>
           </Routes>
         </BrowserRouter>
-      </AuthContextProvider>
+      </UserContextProvider>
     </ChakraProvider>
   </React.StrictMode>
 );

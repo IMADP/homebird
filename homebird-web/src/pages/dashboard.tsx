@@ -1,9 +1,10 @@
 import { Box, Circle, Flex, Stack, useColorModeValue as mode } from '@chakra-ui/react'
+import { AccountSwitcher } from 'features/ui/layout/AccountSwitcher'
+import { NavGroup } from 'features/ui/layout/NavGroup'
+import { NavItem } from 'features/ui/layout/NavItem'
 import {
   BiBuoy,
-  BiCog,
-  BiCommentAdd,
-  BiCreditCard,
+  BiCog, BiCreditCard,
   BiEnvelope,
   BiHome,
   BiNews,
@@ -13,11 +14,8 @@ import {
   BiUserCircle,
   BiWallet
 } from 'react-icons/bi'
-import { AccountSwitcher } from 'features/ui/layout/AccountSwitcher'
-import { NavGroup } from 'features/ui/layout/NavGroup'
-import { NavItem } from 'features/ui/layout/NavItem'
 
-const DashboardPage = () => {
+export const DashboardPage = () => {
   return (
     <Box height="100vh" overflow="hidden" position="relative">
       <Flex h="full" id="app-container">
@@ -68,5 +66,3 @@ const DashboardPage = () => {
     </Box>
   )
 }
-
-export default DashboardPage;

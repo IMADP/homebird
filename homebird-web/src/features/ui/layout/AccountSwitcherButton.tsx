@@ -1,5 +1,5 @@
 import { Box, Flex, FlexProps, HStack, useMenuButton } from '@chakra-ui/react'
-import { Logo } from 'components/Logo'
+import { Logo } from 'features/Logo'
 import { HiSelector } from 'react-icons/hi'
 
 export const AccountSwitcherButton = (props: FlexProps) => {

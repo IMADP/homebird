@@ -15,45 +15,60 @@ import {
   useToast
 } from '@chakra-ui/react';
 import { formRequest } from 'api/api-client';
-import { AuthApi } from 'api/auth-api';
-import { Logo } from 'components/Logo';
+import { Logo } from 'features/Logo';
 import { ValidationError, ValidationErrors } from 'features/ui/validation/ValidationErrors';
+import { UserApi, useUser } from 'features/user';
+import { User } from 'features/user/user-api';
 import { useState } from 'react';
 import {
   Link,
   useLocation, useNavigate
 } from "react-router-dom";
-import { useAuthContext } from '../auth/AuthContext';
-import { PasswordField } from '../components/PasswordField';
+import { PasswordField } from '../features/PasswordField';
 
+/**
+ * LoginPage
+ * 
+ * @returns 
+ */
 export const LoginPage = () => {
-  let navigate = useNavigate();
-  let location = useLocation();
-  let auth = useAuthContext();
+
+  // hooks
+  const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
+  const userContext = useUser();
+
+  // state
   const [errors, setErrors] = useState<Array<ValidationError>>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  let from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || "/";
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const formHandler = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // retrieve form data
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const longExpire = !!formData.get("remember-me");
+
+    // create the login request
+    const userTokenRequest = {
+      email, password, longExpire
+    }
 
     // login
-    await formRequest<string>({
-      toast, setErrors, setLoading,
-      onRequest: AuthApi.getToken({
-        username: email,
-        password: password,
-        longExpire: false
-      }),
-      onSuccess: (token) => {
-        auth.signin(email, token, () => { navigate(from, { replace: true }) });
+    await formRequest<User>({
+      userContext,
+      toast,
+      setErrors,
+      setLoading,
+      onRequest: UserApi.getToken(userTokenRequest),
+      onSuccess: (user) => {
+        userContext.setUser(user);
+        navigate(from, { replace: true });
       }
     });
 
@@ -116,7 +131,7 @@ export const LoginPage = () => {
             sm: 'xl',
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={formHandler}>
             <ValidationErrors errors={errors} />
 
             <Stack spacing="6">
@@ -128,7 +143,7 @@ export const LoginPage = () => {
                 <PasswordField />
               </Stack>
               <HStack justify="space-between">
-                <Checkbox defaultChecked>Remember me</Checkbox>
+                <Checkbox defaultChecked name='remember-me'>Remember me</Checkbox>
                 <Button variant="link" colorScheme="blue" size="sm">
                   Forgot password?
                 </Button>
