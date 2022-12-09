@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { ValidationError } from "features/ui/validation/ValidationErrors";
-import { UserContextType } from "features/user/user-context";
+import { UserContextType } from "features/user";
 const apiClient = axios.create({
   baseURL: "http://localhost:8080/api",
   responseType: "json",
